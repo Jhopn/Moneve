@@ -1,46 +1,67 @@
-# Welcome to your Expo app 👋
+# 📆 Moneve
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Moneve** é uma plataforma de gerenciamento de aluguéis voltada para donos de espaços comerciais. O sistema permite a visualização de agendamentos em um dashboard com calendário, controle de horários para evitar conflitos e gestão separada por usuários e administradores.
 
-## Get started
+---
 
-1. Install dependencies
+## ✨ Funcionalidades
 
-   ```bash
-   npm install
-   ```
+- 📅 **Dashboard com Calendar View** para visualização dos agendamentos
+- 🧑‍💼 **Controle de acesso por roles**: usuário e administrador
+- 🔒 **Regras de segurança (RLS)** no Supabase para evitar acesso indevido
+- ⏱️ **Prevenção de conflitos de horários**
+- 🌐 **Visualização pública de espaços**
+- 📱 Frontend mobile desenvolvido com React Native (Expo)
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 🧱 Stack utilizada
 
-In the output, you'll find options to open the app in a
+- **Frontend**: React Native (Expo)
+- **Backend/DB**: Supabase (PostgreSQL + Auth + RLS)
+- **Outros**: Supabase Storage (para arquivos, se necessário), Supabase Functions (se aplicável)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 📊 Estrutura do banco de dados (Supabase)
 
-## Get a fresh project
+### Tabelas principais
 
-When you're ready, run:
+#### `users`
+- `id`: UUID (auth.uid)
+- `role`: `"admin"` | `"user"`
 
-```bash
-npm run reset-project
-```
+#### `spaces`
+- `id`
+- `name`
+- `description`
+- `owner_id` → FK para `users.id` (apenas `admin`)
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+#### `rentals`
+- `id`
+- `client_name`
+- `start_time`
+- `end_time`
+- `space_id` → FK para `spaces.id`
+- `price`
 
-## Learn more
+---
 
-To learn more about developing your project with Expo, look at the following resources:
+## 🔐 Regras RLS (Row Level Security)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Tabela `spaces`
+- **SELECT**: Pública (para clientes verem espaços)
+- **INSERT/UPDATE/DELETE**: Apenas `admin` que seja `owner_id`
+
+```sql
+CREATE POLICY "Public view of spaces"
+  ON spaces FOR SELECT
+  USING (true);
+
+CREATE POLICY "Admins manage their spaces"
+  ON spaces FOR ALL
+  USING (auth.uid() = owner_id);
+
 
 ## Join the community
 
