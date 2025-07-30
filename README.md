@@ -45,22 +45,6 @@
 - `space_id` → FK para `spaces.id`
 - `price`
 
----
-
-## 🔐 Regras RLS (Row Level Security)
-
-### Tabela `spaces`
-- **SELECT**: Pública (para clientes verem espaços)
-- **INSERT/UPDATE/DELETE**: Apenas `admin` que seja `owner_id`
-
-```sql
-CREATE POLICY "Public view of spaces"
-  ON spaces FOR SELECT
-  USING (true);
-
-CREATE POLICY "Admins manage their spaces"
-  ON spaces FOR ALL
-  USING (auth.uid() = owner_id);
 
 
 ## Join the community
