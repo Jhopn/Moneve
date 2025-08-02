@@ -21,6 +21,30 @@
 - **Backend/DB**: Supabase (PostgreSQL + Auth + RLS)
 - **Outros**: Supabase Storage (para arquivos, se necessário), Supabase Functions (se aplicável)
 
+  
+## 🧑‍💻 Como rodar o projeto localmente
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/Jhopn/Moneve.git
+cd moneve
+```
+### 2. Instale as dependências
+
+```bash
+npm install
+```
+### 3. Configure as variáveis de ambiente
+Copie o arquivo .env.example e renomeie como .env:
+```bash
+cp .env.example .env
+```
+### 4. Rode o Projeto
+```bash
+npm run start
+```
+
 ---
 
 ## 📊 Estrutura do banco de dados (Supabase)
